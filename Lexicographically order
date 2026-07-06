@@ -1,0 +1,25 @@
+#include<stdio.h>
+#include<string.h>
+int main()
+{
+    char string1[50],string2[50];
+    printf("First string = ");
+    gets(string1);
+     printf("Secend string = ");
+    gets(string2);
+    int result=(strcmp(string1,string2));
+    if(result==0)
+    {
+        printf("Both string are equal.");
+    }
+    else if(result<0)
+    {
+        printf("First string is lexicographically smaller");
+    }
+    else
+    {
+       printf("First string is lexicographically greater");
+    }
+
+    return 0;
+}
