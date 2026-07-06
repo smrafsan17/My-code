@@ -1,0 +1,124 @@
+#include <stdio.h>
+#include <string.h>
+#define MAX 50
+
+struct Movie {
+    char title[50];
+    char director[50];
+    float rating;
+};
+struct Movie m[MAX];
+int count = 0;
+void addMovie() {
+    printf("Enter Title: ");
+    scanf(" %[^\n]", m[count].title);
+    printf("Enter Director: ");
+    scanf(" %[^\n]", m[count].director);
+    printf("Enter Rating: ");
+    scanf("%f", &m[count].rating);
+    count++;
+    printf("Movie Added!\n");
+}
+void displayMovies() {
+    int i;
+    if (count == 0) {
+        printf("No movies found!\n");
+        return;
+    }
+    for (i = 0; i < count; i++) {
+        printf("\nMovie %d\n", i + 1);
+        printf("Title: %s\n", m[i].title);
+        printf("Director: %s\n", m[i].director);
+        printf("Rating: %.1f\n", m[i].rating);
+    }
+}
+void searchMovie() {
+    char name[50];
+    int i, found = 0;
+
+    printf("Enter movie title to search: ");
+    scanf(" %[^\n]", name);
+    for (i = 0; i < count; i++) {
+        if (strcmp(m[i].title, name) == 0) {
+            printf("\nFound!\n");
+            printf("Title: %s\n", m[i].title);
+            printf("Director: %s\n", m[i].director);
+            printf("Rating: %.1f\n", m[i].rating);
+            found = 1;
+        }
+    }
+    if (found == 0) {
+        printf("Movie not found!\n");
+    }
+}
+void updateMovie() {
+    char name[50];
+    int i;
+    printf("Enter movie title to update: ");
+    scanf(" %[^\n]", name);
+    for (i = 0; i < count; i++) {
+        if (strcmp(m[i].title, name) == 0) {
+            printf("Enter new Director: ");
+            scanf(" %[^\n]", m[i].director);
+
+            printf("Enter new Rating: ");
+            scanf("%f", &m[i].rating);
+
+            printf("Updated successfully!\n");
+            return;
+        }
+    }
+    printf("Movie not found!\n");
+}
+void saveFile() {
+    FILE *fp;
+    int i;
+    fp = fopen("data.txt", "w");
+    for (i = 0; i < count; i++) {
+        fprintf(fp, "%s %s %.1f\n", m[i].title, m[i].director, m[i].rating);
+    }
+    fclose(fp);
+    printf("Saved to file!\n");
+}
+void loadFile() {
+    FILE *fp;
+    fp = fopen("data.txt", "r");
+    if (fp == NULL) {
+        printf("File not found!\n");
+        return;
+    }
+    count = 0;
+    while (fscanf(fp, " %[^\n] %[^\n] %f",
+                  m[count].title,
+                  m[count].director,
+                  &m[count].rating) != EOF) {
+        count++;
+    }
+    fclose(fp);
+    printf("Loaded from file!\n");
+}
+int main() {
+    int choice;
+    while (1) {
+        printf("\n1. Add Movie\n");
+        printf("2. Display Movies\n");
+        printf("3. Search Movie\n");
+        printf("4. Update Movie\n");
+        printf("5. Save File\n");
+        printf("6. Load File\n");
+        printf("0. Exit\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+        switch (choice) {
+            case 1: addMovie(); break;
+            case 2: displayMovies(); break;
+            case 3: searchMovie(); break;
+            case 4: updateMovie(); break;
+            case 5: saveFile(); break;
+            case 6: loadFile(); break;
+            case 0: return 0;
+            default: printf("Wrong choice!\n");
+        }
+    }
+    return 0;
+}
