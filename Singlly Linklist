@@ -1,0 +1,256 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node
+{
+    int data;
+    struct Node *next;
+};
+
+struct Node *head = NULL;
+
+// Create Node at End
+void create(int value)
+{
+    struct Node *newNode, *temp;
+
+    newNode = (struct Node *)malloc(sizeof(struct Node));
+    newNode->data = value;
+    newNode->next = NULL;
+
+    if(head == NULL)
+    {
+        head = newNode;
+    }
+    else
+    {
+        temp = head;
+        while(temp->next != NULL)
+        {
+            temp = temp->next;
+        }
+        temp->next = newNode;
+    }
+}
+
+// Display List
+void display()
+{
+    struct Node *temp = head;
+
+    if(head == NULL)
+    {
+        printf("Linked List is Empty.\n");
+        return;
+    }
+
+    printf("Linked List: ");
+
+    while(temp != NULL)
+    {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+// Search Item
+void search(int key)
+{
+    struct Node *temp = head;
+    int pos = 1;
+
+    while(temp != NULL)
+    {
+        if(temp->data == key)
+        {
+            printf("%d found at position %d\n", key, pos);
+            return;
+        }
+
+        temp = temp->next;
+        pos++;
+    }
+
+    printf("%d not found.\n", key);
+}
+
+// Insert at Beginning
+void insertBeginning(int value)
+{
+    struct Node *newNode;
+
+    newNode = (struct Node *)malloc(sizeof(struct Node));
+    newNode->data = value;
+
+    newNode->next = head;
+    head = newNode;
+}
+
+// Insert at End
+void insertEnd(int value)
+{
+    create(value);
+}
+
+// Insert at Position
+void insertMiddle(int value, int pos)
+{
+    struct Node *newNode, *temp;
+    int i;
+
+    if(pos == 1)
+    {
+        insertBeginning(value);
+        return;
+    }
+
+    newNode = (struct Node *)malloc(sizeof(struct Node));
+    newNode->data = value;
+
+    temp = head;
+
+    for(i = 1; i < pos - 1 && temp != NULL; i++)
+    {
+        temp = temp->next;
+    }
+
+    if(temp == NULL)
+    {
+        printf("Invalid Position.\n");
+        free(newNode);
+        return;
+    }
+
+    newNode->next = temp->next;
+    temp->next = newNode;
+}
+
+// Delete Beginning
+void deleteBeginning()
+{
+    struct Node *temp;
+
+    if(head == NULL)
+    {
+        printf("List is Empty.\n");
+        return;
+    }
+
+    temp = head;
+    head = head->next;
+    free(temp);
+}
+
+// Delete End
+void deleteEnd()
+{
+    struct Node *temp, *prev;
+
+    if(head == NULL)
+    {
+        printf("List is Empty.\n");
+        return;
+    }
+
+    if(head->next == NULL)
+    {
+        free(head);
+        head = NULL;
+        return;
+    }
+
+    temp = head;
+
+    while(temp->next != NULL)
+    {
+        prev = temp;
+        temp = temp->next;
+    }
+
+    prev->next = NULL;
+    free(temp);
+}
+
+// Delete Position
+void deleteMiddle(int pos)
+{
+    struct Node *temp, *prev;
+    int i;
+
+    if(head == NULL)
+    {
+        printf("List is Empty.\n");
+        return;
+    }
+
+    if(pos == 1)
+    {
+        deleteBeginning();
+        return;
+    }
+
+    temp = head;
+
+    for(i = 1; i < pos; i++)
+    {
+        prev = temp;
+        temp = temp->next;
+
+        if(temp == NULL)
+        {
+            printf("Invalid Position.\n");
+            return;
+        }
+    }
+
+    prev->next = temp->next;
+    free(temp);
+}
+
+int main()
+{
+    // Create Linked List
+    create(15);
+    create(20);
+    create(55);
+    create(78);
+
+    printf("Initial List:\n");
+    display();
+
+    // Search
+    search(55);
+
+    // Insert Beginning
+    insertBeginning(5);
+    printf("\nAfter Insert at Beginning:\n");
+    display();
+
+    // Insert Middle
+    insertMiddle(25, 4);
+    printf("\nAfter Insert at Position 4:\n");
+    display();
+
+    // Insert End
+    insertEnd(50);
+    printf("\nAfter Insert at End:\n");
+    display();
+
+    // Delete Beginning
+    deleteBeginning();
+    printf("\nAfter Delete Beginning:\n");
+    display();
+
+    // Delete Middle
+    deleteMiddle(3);
+    printf("\nAfter Delete Position 3:\n");
+    display();
+
+    // Delete End
+    deleteEnd();
+    printf("\nAfter Delete End:\n");
+    display();
+
+    return 0;
+}
