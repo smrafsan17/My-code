@@ -1,0 +1,240 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node
+{
+    int data;
+    struct Node *prev;
+    struct Node *next;
+};
+
+struct Node *head = NULL;
+
+/* Create 4 Nodes */
+void createList()
+{
+    struct Node *n1, *n2, *n3, *n4;
+
+    n1 = (struct Node*)malloc(sizeof(struct Node));
+    n2 = (struct Node*)malloc(sizeof(struct Node));
+    n3 = (struct Node*)malloc(sizeof(struct Node));
+    n4 = (struct Node*)malloc(sizeof(struct Node));
+
+    n1->data = 10;
+    n2->data = 20;
+    n3->data = 30;
+    n4->data = 40;
+
+    n1->prev = NULL;
+    n1->next = n2;
+
+    n2->prev = n1;
+    n2->next = n3;
+
+    n3->prev = n2;
+    n3->next = n4;
+
+    n4->prev = n3;
+    n4->next = NULL;
+
+    head = n1;
+}
+
+/* Display List */
+void display()
+{
+    struct Node *temp = head;
+
+    while(temp != NULL)
+    {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+/* Insert at Beginning */
+void insertBeginning(int value)
+{
+    struct Node *newNode;
+
+    newNode = (struct Node*)malloc(sizeof(struct Node));
+
+    newNode->data = value;
+    newNode->prev = NULL;
+    newNode->next = head;
+
+    if(head != NULL)
+        head->prev = newNode;
+
+    head = newNode;
+}
+
+/* Insert at End */
+void insertEnd(int value)
+{
+    struct Node *newNode, *temp;
+
+    newNode = (struct Node*)malloc(sizeof(struct Node));
+
+    newNode->data = value;
+    newNode->next = NULL;
+
+    temp = head;
+
+    while(temp->next != NULL)
+    {
+        temp = temp->next;
+    }
+
+    temp->next = newNode;
+    newNode->prev = temp;
+}
+
+/* Insert After a Specific Node */
+void insertAfter(int key, int value)
+{
+    struct Node *temp, *newNode;
+
+    temp = head;
+
+    while(temp != NULL && temp->data != key)
+    {
+        temp = temp->next;
+    }
+
+    if(temp == NULL)
+    {
+        printf("Node not found\n");
+        return;
+    }
+
+    newNode = (struct Node*)malloc(sizeof(struct Node));
+
+    newNode->data = value;
+    newNode->next = temp->next;
+    newNode->prev = temp;
+
+    if(temp->next != NULL)
+    {
+        temp->next->prev = newNode;
+    }
+
+    temp->next = newNode;
+}
+
+/* Delete First Node */
+void deleteBeginning()
+{
+    struct Node *temp;
+
+    if(head == NULL)
+        return;
+
+    temp = head;
+    head = head->next;
+
+    if(head != NULL)
+        head->prev = NULL;
+
+    free(temp);
+}
+
+/* Delete Last Node */
+void deleteEnd()
+{
+    struct Node *temp;
+
+    if(head == NULL)
+        return;
+
+    temp = head;
+
+    while(temp->next != NULL)
+    {
+        temp = temp->next;
+    }
+
+    if(temp == head)
+    {
+        head = NULL;
+    }
+    else
+    {
+        temp->prev->next = NULL;
+    }
+
+    free(temp);
+}
+
+/* Delete Specific Node */
+void deleteNode(int value)
+{
+    struct Node *temp;
+
+    temp = head;
+
+    while(temp != NULL && temp->data != value)
+    {
+        temp = temp->next;
+    }
+
+    if(temp == NULL)
+    {
+        printf("Node not found\n");
+        return;
+    }
+
+    if(temp == head)
+    {
+        head = temp->next;
+
+        if(head != NULL)
+            head->prev = NULL;
+    }
+    else
+    {
+        temp->prev->next = temp->next;
+
+        if(temp->next != NULL)
+        {
+            temp->next->prev = temp->prev;
+        }
+    }
+
+    free(temp);
+}
+
+int main()
+{
+    createList();
+
+    printf("Original List: ");
+    display();
+
+    insertBeginning(5);
+    printf("After Insert Beginning: ");
+    display();
+
+    insertEnd(50);
+    printf("After Insert End: ");
+    display();
+
+    insertAfter(20, 25);
+    printf("After Insert After 20: ");
+    display();
+
+    deleteBeginning();
+    printf("After Delete Beginning: ");
+    display();
+
+    deleteEnd();
+    printf("After Delete End: ");
+    display();
+
+    deleteNode(30);
+    printf("After Delete 30: ");
+    display();
+
+    return 0;
+}
