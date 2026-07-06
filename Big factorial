@@ -1,0 +1,30 @@
+/*calculate big factorial and print last 4 digit*/
+
+#include<stdio.h>
+int fact(int n)
+{
+    if(n==1||n==0)
+    {
+        return 1;
+    }
+    else
+    {
+        return(n*fact(n-1))%10000;
+    }
+}
+int main()
+
+{
+    int n;
+    printf("input the number for factorial =");
+    scanf("%d",&n);
+    if(n>=20)
+    {
+        printf(" 0000");
+    }
+    else
+    {
+        printf("%d",fact(n));
+    }
+return 0;
+}
